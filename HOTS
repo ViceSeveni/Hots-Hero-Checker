@@ -60,7 +60,7 @@ def hots():
     hero = Hero(request)
     hero.info()
     while request != '':
-        request = input('Enter "build" to see builds for the current hero, or enter the name of another hero: ')
+        request = input('Enter "build" to see builds for your hero, the name of a new hero to view, or hit "Enter" to exit: ')
         if request == '':
             exit()
         if request.lower().strip() == 'build':
