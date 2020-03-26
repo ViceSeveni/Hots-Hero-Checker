@@ -1,0 +1,74 @@
+import requests
+import bs4
+import webbrowser
+import sys
+
+class Hero():
+    def __init__(self, name):
+        self.name = name.title()
+        self.primaries = {}
+        self.heroics = {}
+        self.url = 'https://heroesofthestorm.com/en-us/heroes/' + name
+        self.build = 'https://www.icy-veins.com/heroes/' + self.name.lower() + '-build-guide'
+        
+        site = requests.get(self.url)
+        soup = bs4.BeautifulSoup(site.text, 'html.parser')
+        
+        self.role = soup.find('h4' , {'class':'summaryCard-secondaryHeadline'}).text
+        self.description = soup.find('div' , {'class':'heroDesc paragraph__description'}).text
+        
+        abilitylist = soup.find('div' , {'class':'heroAbilities heroAbilities--primary'})
+        moves = abilitylist.find_all('div' , {'class':'heroAbility'})
+        for x in moves:
+            move = x.find('span' , {'class':'heroAbility-name-text'}).text
+            desc = x.find('span' , {'class':'heroAbility-description'}).text
+            self.primaries[move] = desc
+            
+        heroiclist = soup.find('div' , {'class':'heroAbilities heroAbilities--heroic'})
+        moves = heroiclist.find_all('div' , {'class':'heroAbility'})
+        for x in moves:
+            move = x.find('span' , {'class':'heroAbility-name-text'}).text
+            desc = x.find('span' , {'class':'heroAbility-description'}).text
+            self.heroics[move] = desc
+            
+    def showprimaries(self):
+        for k,v in self.primaries.items():
+            print('\n' + k + ':\n' + v)
+            
+    def showheroics (self):
+        for k,v in self.heroics.items():
+            print('\n' + k + ':\n' + v)
+            
+    def showdescription(self):
+        print('\n"' + self.description + '"')
+        
+    def info(self):
+        print('\nName: ' + self.name)
+        print('Role: ' + self.role)
+        self.showdescription()
+        print('-'*80 + '\n')
+        print('Primaries:\n')
+        self.showprimaries()
+        print('-'*80  + '\n')
+        print('Heroics:\n')
+        self.showheroics()
+        print('-'*80 + '\n')
+        
+        
+def hots():
+    request = sys.argv[1]
+    hero = Hero(request)
+    hero.info()
+    while request != '':
+        request = input('Enter "build" to see builds for the current hero, or enter the name of another hero: ')
+        if request == '':
+            exit()
+        if request.lower().strip() == 'build':
+            webbrowser.open(hero.build)
+            exit()
+        else:
+            hero = Hero(request)
+            hero.info()
+            continue
+    
+hots()
