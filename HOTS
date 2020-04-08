@@ -10,6 +10,7 @@ class Hero():
         self.heroics = {}
         self.url = 'https://heroesofthestorm.com/en-us/heroes/' + name
         self.build = 'https://www.icy-veins.com/heroes/' + self.name.lower() + '-build-guide'
+        self.wiki = 'https://heroesofthestorm.gamepedia.com/' + self.name.lower()
         
         site = requests.get(self.url)
         soup = bs4.BeautifulSoup(site.text, 'html.parser')
@@ -35,7 +36,7 @@ class Hero():
         for k,v in self.primaries.items():
             print('\n' + k + ':\n' + v)
             
-    def showheroics (self):
+    def showheroics(self):
         for k,v in self.heroics.items():
             print('\n' + k + ':\n' + v)
             
@@ -43,32 +44,72 @@ class Hero():
         print('\n"' + self.description + '"')
         
     def info(self):
-        print('\nName: ' + self.name)
+        print('\n' + '-'*80 + '\n')
+        print('Name: ' + self.name)
         print('Role: ' + self.role)
         self.showdescription()
-        print('-'*80 + '\n')
+        print('\n' + '-'*80 + '\n')
         print('Primaries:\n')
         self.showprimaries()
-        print('-'*80  + '\n')
+        print('\n' + '-'*80 + '\n')
         print('Heroics:\n')
         self.showheroics()
-        print('-'*80 + '\n')
-        
+        print('\n' + '-'*80 + '\n')
+#--------------------------------------------------------------------       
         
 def hots():
-    request = sys.argv[1]
-    hero = Hero(request)
-    hero.info()
-    while request != '':
-        request = input('Enter "build" to see builds for your hero, the name of a new hero to view, or hit "Enter" to exit: ')
-        if request == '':
-            exit()
-        if request.lower().strip() == 'build':
-            webbrowser.open(hero.build)
-            exit()
-        else:
-            hero = Hero(request)
+    flag = 0
+    while True:
+        while flag == 0:
+            try:
+                request = str(sys.argv[1])
+                flag += 1
+            except:
+                request = input('Enter the name of a hero: ')
+                request = request.strip()
+                flag += 1
+                continue
+        
+        while flag == 1:
+            try: 
+                hero = Hero(request)
+                flag = 2
+            except: 
+                print('\nSomething went wrong, did you enter the hero\'s name correctly?')
+                print('You entered: ' + '"' + request + '"\n')
+                flag = 0
+                break
+            
+        while flag == 2:
             hero.info()
-            continue
+            flag += 1
+            while flag == 3:
+                request = input('\nEnter "b" for builds, "w" for wiki, the name of a new hero, or hit "Enter" to exit: ')
+                try:
+                    if request == ''.strip():
+                        flag += 1
+                        continue
+                    if request.lower().strip() == 'b':
+                        print('\nBuild for ' + hero.name + ' requested!')
+                        webbrowser.open(hero.build)
+                        print('Build for ' + hero.name + ' opened!')
+                        continue
+                    if request.lower().strip() == 'w':
+                        print('\nWiki for ' + hero.name + ' requested!')
+                        webbrowser.open(hero.wiki)
+                        print('Wiki for ' + hero.name + ' opened!')
+                        continue
+                    else:
+                        hero = Hero(request)
+                        flag = 1
+                        continue
+                except:
+                    print('\nSomething went wrong. Did you misspell anything?.')
+                    print('You entered: "' + request + '"')
+                    continue
+                
+        while flag == 4:
+            exit()
+        
     
 hots()
