@@ -2,6 +2,7 @@ import requests
 import bs4
 import webbrowser
 import sys
+import os
 
 class Hero():
     def __init__(self, name):
@@ -66,13 +67,12 @@ def hots():
                 flag += 1
             except:
                 request = input('Enter the name of a hero: ')
-                request = request.strip()
                 flag += 1
                 continue
         
         while flag == 1:
             try: 
-                hero = Hero(request)
+                hero = Hero(request.strip())
                 flag = 2
             except: 
                 print('\nSomething went wrong, did you enter the hero\'s name correctly?')
@@ -86,7 +86,7 @@ def hots():
             while flag == 3:
                 request = input('\nEnter "b" for builds, "w" for wiki, the name of a new hero, or hit "Enter" to exit: ')
                 try:
-                    if request == ''.strip():
+                    if request.strip() == '':
                         flag += 1
                         continue
                     if request.lower().strip() == 'b':
@@ -100,7 +100,7 @@ def hots():
                         print('Wiki for ' + hero.name + ' opened!')
                         continue
                     else:
-                        hero = Hero(request)
+                        hero = Hero(request.strip())
                         flag = 1
                         continue
                 except:
@@ -110,6 +110,5 @@ def hots():
                 
         while flag == 4:
             exit()
-        
-    
+            
 hots()
