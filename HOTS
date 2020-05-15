@@ -57,7 +57,6 @@ class Hero():
         self.showheroics()
         print('\n' + '-'*80 + '\n')
 #--------------------------------------------------------------------       
-        
 def hots():
     flag = 0
     task = 0
@@ -70,7 +69,7 @@ def hots():
                 if len(sys.argv) > 2:
                     request = str(sys.argv[1])
                     task = str(sys.argv[2])
-                    flag += 1
+                    flag += 2
             except:
                 request = input('Enter the name of a hero: ')
                 flag += 1
@@ -89,24 +88,100 @@ def hots():
             
         while flag == 2:
             if task != 0:
-                if task.lower().strip() == 'b':
-                    webbrowser.open(hero.build)
-                    exit()
-                    break
-                if task.lower().strip() == 'w':
-                    webbrowser.open(hero.wiki)
-                    exit()
-                    break
-                if task != 'b' or 'w':
-                    print('Error! You can only type "B" or "W" after a hero\'s name!\n')
+                try:
+                    if task.lower().strip() == 'b':
+                        if request.lower() == 'butcher':
+                            request = 'the-butcher'
+                        if request.lower() == 'etc':
+                            request = 'e-t-c'
+                        if request.lower() == 'hammer':
+                            request = 'sgt-hammer'
+                        if request.lower() == 'morales':
+                            request = 'lt-morales'
+                        if request.lower() == 'vikings':
+                            request = 'the-lost-vikings'
+                        if request.lower() == 'liming':
+                            request = 'li-ming'
+                        if request.lower() == "kelthuzad":
+                            request = "kel-thuzad"
+                        if request.lower() == 'lili':
+                            request = 'li-li'
+                        
+                        build = 'https://www.icy-veins.com/heroes/' + request + '-build-guide'
+                        test = requests.get(build)
+                        if test.status_code < 400:
+                            webbrowser.open(build)
+                            flag = 4
+                            continue
+                        if test.status_code >= 400:
+                            print('Page not found. Try again.')
+                            task = 0
+                            flag = 0
+                            sys.argv = []
+                            continue
+                        
+                    if task.lower().strip() == 'w':
+                        if request.lower() == 'butcher':
+                            request = 'The_Butcher'
+                        if request.lower() == 'dva':
+                            request = 'D.va'
+                        if request.lower() == 'guldan':
+                            request = "Gul'dan"
+                        if request.lower() == 'kaelthas':
+                            request = "Kael'thas"
+                        if request.lower() == 'kelthuzad':
+                            request = "Kel'thuzad"
+                        if request.lower() == 'liming':
+                            request = 'Li-Ming'
+                        if request.lower() == 'hammer':
+                            request = 'Sgt._Hammer'
+                        if request.lower() == 'zuljin':
+                            request = "Zul'jin"
+                        if request.lower() == 'vikings':
+                            request = 'The_Lost_Vikings'
+                        if request.lower() == 'anubarak':
+                            request = "Anub'arak"
+                        if request.lower() == 'etc':
+                            request = 'E.T.C.'
+                        if request.lower() == 'malganis':
+                            request = "Mal'ganis"
+                        if request.lower() == 'morales':
+                            request = 'Lt._Morales'
+                        if request.lower() == 'lili':
+                            request = 'Li_Li'
+                        
+                        wiki = 'https://heroesofthestorm.gamepedia.com/' + request
+                        test = requests.get(wiki)
+                        if test.status_code < 400:
+                            webbrowser.open(wiki)
+                            flag = 4
+                            continue
+                        if test.status_code >= 400:
+                            print('Page not found. Try again.')
+                            task = 0
+                            flag = 0
+                            sys.argv = []
+                            continue
+                        continue
+                    
+                    if task != 'b' or 'w':
+                        print('Error! You can only type "B" or "W" after a hero\'s name!\n')
+                        flag = 0
+                        task = 0
+                        sys.argv = []
+                        continue
+                    
+                except:
+                    print(f'Something went wrong, you typed "{request}".')
                     flag = 0
                     task = 0
                     sys.argv = []
                     continue
                     
             if task == 0:
-                #os.system('cls') - WINDOWS
-                #os.system('clear') - LINUX
+                if flag == 4:
+                    break
+                os.system('cls')
                 hero.info()
                 flag += 1
                 while flag == 3:
@@ -134,7 +209,7 @@ def hots():
                         print('You entered: "' + request + '"')
                         continue
             
-            while flag == 4:
-                exit()
+        if flag == 4:
+            exit()
         
 hots()
