@@ -9,7 +9,7 @@ class Hero():
         self.name = name.title()
         self.primaries = {}
         self.heroics = {}
-        self.url = 'https://heroesofthestorm.com/en-us/heroes/' + name
+        self.url = 'https://heroesofthestorm.com/en-us/heroes/' + self.name.lower()
         self.build = 'https://www.icy-veins.com/heroes/' + self.name.lower() + '-build-guide'
         self.wiki = 'https://heroesofthestorm.gamepedia.com/' + self.name.lower()
         
@@ -212,4 +212,6 @@ def hots():
         if flag == 4:
             exit()
         
-hots()
+
+if __name__ == '__main__':
+    hots()
